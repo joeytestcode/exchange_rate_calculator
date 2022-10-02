@@ -13,6 +13,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   late Future<List> _rates;
+  final TextEditingController _controller = TextEditingController();
   String _selectedCurrency = ExchangeRate.currencyKorea;
   double _selectedCurrencyValue = 0.0;
   double _money = 1000.0;
@@ -134,46 +135,88 @@ class _MyHomePageState extends State<MyHomePage> {
 
   ColoredBox _getInputWidget(List<Map<String, double>> rates) {
     return ColoredBox(
-      color: Colors.green.shade700,
+      color: Colors.blue,
       child: Row(
         children: [
           DropdownButton(
             underline: Container(),
+            dropdownColor: Colors.blue,
             value: _selectedCurrency,
             items: rates
                 .map((e) => DropdownMenuItem(
                     value: e.keys.first,
                     child: Text(
                       ' ${e.keys.first}',
-                      style: const TextStyle(color: Colors.white),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                      ),
                     )))
                 .toList(),
             onChanged: (value) {
               setState(() {
                 _selectedCurrency = value ?? '';
                 _selectedCurrencyValue = _getSelectedCurrencyValue(rates);
+                _setTextFormCurrency();
               });
             },
           ),
           Expanded(
-            child: TextFormField(
+            flex: 10,
+            child: Padding(
+              padding: const EdgeInsets.all(7.0),
+              child: TextFormField(
+                autofocus: true,
+                decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(14)),
+                    ),
+                    contentPadding: EdgeInsets.all(2)),
+                controller: _controller,
                 cursorColor: Colors.white,
-                style: const TextStyle(color: Colors.white),
-                initialValue: _money.toString(),
+                style: const TextStyle(color: Colors.white, fontSize: 24),
+                // initialValue: _money.toString(),
                 maxLines: 1,
                 keyboardType: TextInputType.number,
                 inputFormatters: [
                   FilteringTextInputFormatter.allow(RegExp(r'[\d\.]'))
                 ],
                 textAlign: TextAlign.right,
+                onTap: () {
+                  _selectAllText();
+                },
                 onChanged: (value) {
                   setState(() {
-                    _money = double.parse(value);
+                    if (value.isEmpty) {
+                      _money = 0;
+                    } else {
+                      _money = double.parse(value);
+                    }
                   });
-                }),
+                },
+                onEditingComplete: () {
+                  _setTextFormCurrency();
+                  _selectAllText();
+                },
+              ),
+            ),
           ),
         ],
       ),
     );
+  }
+
+  void _selectAllText() {
+    _controller.selection = TextSelection(
+      baseOffset: 0,
+      extentOffset: _controller.text.length,
+    );
+  }
+
+  void _setTextFormCurrency() {
+    final formatCurrency = NumberFormat.simpleCurrency(
+        decimalDigits: 2,
+        locale: ExchangeRate.currencyLocale[_selectedCurrency]);
+    _controller.text = formatCurrency.format(_money);
   }
 }
