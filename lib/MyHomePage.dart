@@ -133,14 +133,13 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  ColoredBox _getInputWidget(List<Map<String, double>> rates) {
-    return ColoredBox(
-      color: Colors.blue,
+  Container _getInputWidget(List<Map<String, double>> rates) {
+    return Container(
+      decoration: BoxDecoration(color: Colors.blue.shade900),
       child: Row(
         children: [
           DropdownButton(
             underline: Container(),
-            dropdownColor: Colors.blue,
             value: _selectedCurrency,
             items: rates
                 .map((e) => DropdownMenuItem(
@@ -167,11 +166,8 @@ class _MyHomePageState extends State<MyHomePage> {
               padding: const EdgeInsets.all(7.0),
               child: TextFormField(
                 autofocus: true,
-                decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(14)),
-                    ),
-                    contentPadding: EdgeInsets.all(2)),
+                decoration:
+                    const InputDecoration(contentPadding: EdgeInsets.all(2)),
                 controller: _controller,
                 cursorColor: Colors.white,
                 style: const TextStyle(color: Colors.white, fontSize: 24),
