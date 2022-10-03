@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.indigo,
       ),
-      home: const MyHomePage(title: 'Exchange Rate Calculator'),
+      home: MyHomePage(title: 'Exchange Rate Calculator'),
     );
   }
 }

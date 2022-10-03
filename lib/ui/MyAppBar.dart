@@ -1,3 +1,5 @@
+import 'package:exchange_rate_calculator/data/exchange_rate.dart';
+import 'package:exchange_rate_calculator/ui/MySettings.dart';
 import 'package:flutter/material.dart';
 
 import 'MyHomePage.dart';
@@ -13,7 +15,6 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Theme.of(context).colorScheme.primary,
       title: Text(widget.title),
       actions: [
         PopupMenuButton(
@@ -23,12 +24,20 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   value: 0,
                   child: Row(
                     children: const [
+                      Icon(Icons.update, color: Colors.blue),
+                      Text('  Update currency rates'),
+                    ],
+                  )),
+              PopupMenuItem(
+                  value: 1,
+                  child: Row(
+                    children: const [
                       Icon(Icons.settings, color: Colors.blue),
                       Text('  Settings'),
                     ],
                   )),
               PopupMenuItem(
-                  value: 1,
+                  value: 2,
                   child: Row(
                     children: const [
                       Icon(Icons.question_mark, color: Colors.blue),
@@ -37,7 +46,21 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   )),
             ];
           },
-          onSelected: (value) {},
+          onSelected: (value) {
+            switch (value) {
+              case 0:
+                widget.rates = ExchangeRate.readRate();
+                break;
+              case 1:
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: ((context) => MySettings())));
+                break;
+              case 2:
+                break;
+              default:
+                break;
+            }
+          },
         )
       ],
     );

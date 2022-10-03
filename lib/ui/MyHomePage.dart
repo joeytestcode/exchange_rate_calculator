@@ -6,22 +6,22 @@ import 'MyInputWidget.dart';
 import 'MyListWidget.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+  MyHomePage({super.key, required this.title});
   final String title;
+  Future<List<Map<String, double>>> rates = ExchangeRate.readRate();
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late Future<List> _rates;
   String _selectedCurrency = ExchangeRate.currencyKorea;
   double _money = 1000.0;
 
   @override
   void initState() {
     super.initState();
-    _rates = ExchangeRate.readRate();
+    widget.rates = ExchangeRate.readRate();
   }
 
   @override
@@ -30,7 +30,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: MyAppBar(widget: widget),
       body: Center(
         child: FutureBuilder(
-          future: _rates,
+          future: widget.rates,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
