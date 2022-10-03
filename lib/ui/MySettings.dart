@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Settings extends StatefulWidget {
-  const Settings({super.key});
+class MySettings extends StatefulWidget {
+  const MySettings({super.key});
 
   @override
-  State<Settings> createState() => _SettingState();
+  State<MySettings> createState() => _MySettingState();
 }
 
-class _SettingState extends State<Settings> {
+class _MySettingState extends State<MySettings> {
   @override
   Widget build(BuildContext context) {
     return Container();

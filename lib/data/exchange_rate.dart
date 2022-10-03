@@ -1,7 +1,7 @@
 import 'dart:convert';
 
-import 'package:exchange_rate_calculator/cp949_uni_conversion.dart';
-import 'package:exchange_rate_calculator/web_fetcher.dart';
+import 'package:exchange_rate_calculator/tool/cp949_uni_conversion.dart';
+import 'package:exchange_rate_calculator/tool/web_fetcher.dart';
 import 'package:http/http.dart';
 
 class ExchangeRate {

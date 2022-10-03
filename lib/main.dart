@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'MyHomePage.dart';
+
+import 'ui/MyHomePage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,8 +14,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Exchange Rate Calculator',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        primaryColor: Colors.blue.shade900,
+        primarySwatch: Colors.indigo,
       ),
       home: const MyHomePage(title: 'Exchange Rate Calculator'),
     );
