@@ -68,19 +68,21 @@ const currencyLocale = {
   "우즈베키스탄 UZS": "uz_UZ",
 };
 
+const String _currencyKorea = '대한민국 KRW';
+const String _defaultDate = '2022.10.04 20:01';
+const double _defaultMoney = 1000.0;
+
 class ExchangeRate extends ChangeNotifier {
   ExchangeRate() {
     readRate();
   }
 
-  final String _webPage =
-      'https://www.hanabank.com/cont/mall/mall15/mall1501/index.jsp';
-  final String _currencyKorea = '대한민국 KRW';
+  final String _webPage = 'https://finance.naver.com/marketindex/';
   final List<Map<String, double>> _rates = [];
 
   List<Map<String, double>> get rates => _rates;
 
-  String _selectedCurrency = '대한민국 KRW';
+  String _selectedCurrency = _currencyKorea;
   String get selectedCurrency {
     _readSelectedCurrency();
     return _selectedCurrency;
@@ -102,15 +104,33 @@ class ExchangeRate extends ChangeNotifier {
     writeMoney(value);
   }
 
+  String _date = '2022.10.04 20:01';
+  String get date {
+    _readDate();
+    return _date;
+  }
+
+  set date(String value) {
+    _date = value;
+    _writeDate(value);
+  }
+
   Future<void> readRate() async {
-    const String selectorDate = '#searchContentDiv';
+    const String _selectorDate = '#section_ex1 > div > span.date';
+    const String _selectorCurrencyTable = 'body > div';
+    const String _selectorCurrencyName = 'td.tit > a';
     Response page = await WebFetcher.getPage(_webPage);
     // String pageString = cp949toUni(page.body.codeUnits);
-    Document document = parse(page.body);
-    var temp = document.querySelector(selectorDate)?.text;
 
-    print(page.body.toString());
-    print(temp);
+    Document document = parse(page.body);
+    _date = document.querySelector(_selectorDate)?.text ?? _defaultDate;
+
+    var temp = document.querySelectorAll(_selectorCurrencyTable);
+
+    for (var e in temp) {
+      String test = e.querySelector(_selectorCurrencyName)?.text ?? '';
+      print(test);
+    }
 
     // List<Map> fullRates = _readJson(pageString);
 
@@ -131,7 +151,8 @@ class ExchangeRate extends ChangeNotifier {
   void _readSelectedCurrency() {
     SharedPreferences.getInstance().then(
       (value) {
-        _selectedCurrency = value.getString('selectedCurrency') ?? '대한민국 KRW';
+        _selectedCurrency =
+            value.getString('selectedCurrency') ?? _currencyKorea;
         notifyListeners();
       },
     );
@@ -148,7 +169,7 @@ class ExchangeRate extends ChangeNotifier {
   void _readMoney() {
     SharedPreferences.getInstance().then(
       (value) {
-        _money = value.getDouble('money') ?? 0.0;
+        _money = value.getDouble('money') ?? _defaultMoney;
         notifyListeners();
       },
     );
@@ -158,6 +179,23 @@ class ExchangeRate extends ChangeNotifier {
     SharedPreferences.getInstance().then(
       (value) {
         value.setDouble('money', money);
+      },
+    );
+  }
+
+  void _readDate() {
+    SharedPreferences.getInstance().then(
+      (value) {
+        _date = value.getString('date') ?? _defaultDate;
+        notifyListeners();
+      },
+    );
+  }
+
+  void _writeDate(String date) {
+    SharedPreferences.getInstance().then(
+      (value) {
+        value.setString('date', date);
       },
     );
   }
