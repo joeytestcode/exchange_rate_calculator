@@ -125,9 +125,9 @@ class _MyInputWidgetState extends State<MyInputWidget> {
     );
   }
 
-  String _getFormattedCurrencyString(double money, String currencyLocale) {
+  String _getFormattedCurrencyString(double money, String locale) {
     final formatCurrency = NumberFormat.simpleCurrency(
-        decimalDigits: 2, locale: ExchangeRate.currencyLocale[currencyLocale]);
+        decimalDigits: 2, locale: currencyLocale[locale]);
     return formatCurrency.format(money);
   }
 }

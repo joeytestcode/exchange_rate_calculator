@@ -1,6 +1,7 @@
 import 'package:exchange_rate_calculator/data/exchange_rate.dart';
 import 'package:exchange_rate_calculator/ui/MySettings.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'MyHomePage.dart';
 
@@ -49,7 +50,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           onSelected: (value) {
             switch (value) {
               case 0:
-                widget.rates = ExchangeRate.readRate();
+                Provider.of<ExchangeRate>(context, listen: false).readRate();
                 break;
               case 1:
                 Navigator.of(context).push(

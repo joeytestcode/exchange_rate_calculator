@@ -1,5 +1,6 @@
 import 'package:exchange_rate_calculator/data/exchange_rate.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'MyAppBar.dart';
 import 'MyInputWidget.dart';
@@ -8,75 +9,43 @@ import 'MyListWidget.dart';
 class MyHomePage extends StatefulWidget {
   MyHomePage({super.key, required this.title});
   final String title;
-  Future<List<Map<String, double>>> rates = ExchangeRate.readRate();
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _selectedCurrency = ExchangeRate.currencyKorea;
-  double _money = 1000.0;
-
-  @override
-  void initState() {
-    super.initState();
-    widget.rates = ExchangeRate.readRate();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: MyAppBar(widget: widget),
       body: Center(
-        child: FutureBuilder(
-          future: widget.rates,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const CircularProgressIndicator();
-            }
-            if (snapshot.hasData) {
-              final rates = snapshot.data as List<Map<String, double>>;
-              final filteredRates = _filter(rates);
-              return Center(
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: MyListWidget(
-                        selectedCurrency: _selectedCurrency,
-                        money: _money,
-                        rates: filteredRates,
-                      ),
-                    ),
-                    MyInputWidget(
-                      onChangeCurrency: _onChangeCurrency,
-                      onChangeMoney: _onChangeMoney,
-                      rates: filteredRates,
-                      initialMoney: 1000.0,
-                      initialSelectedCurrency: _selectedCurrency,
-                    ),
-                  ],
+        child: Consumer<ExchangeRate>(
+          builder: (context, value, child) {
+            List<Map<String, double>> filteredRates = _filter(value.rates);
+            return Column(
+              children: [
+                Expanded(
+                  child: MyListWidget(
+                    selectedCurrency: value.selectedCurrency,
+                    money: value.money,
+                    rates: filteredRates,
+                  ),
                 ),
-              );
-            } else {
-              return const CircularProgressIndicator();
-            }
+                MyInputWidget(
+                  onChangeCurrency: (String currency) =>
+                      value.writeSelectedCurrency(currency),
+                  onChangeMoney: (double money) => value.writeMoney(money),
+                  rates: filteredRates,
+                  initialMoney: value.money,
+                  initialSelectedCurrency: value.selectedCurrency,
+                ),
+              ],
+            );
           },
         ),
       ),
     );
-  }
-
-  void _onChangeCurrency(String selectedCurrency) {
-    setState(() {
-      _selectedCurrency = selectedCurrency;
-    });
-  }
-
-  void _onChangeMoney(double money) {
-    setState(() {
-      _money = money;
-    });
   }
 
   List<Map<String, double>> _filter(List<Map<String, double>> rates) {

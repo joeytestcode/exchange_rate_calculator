@@ -1,4 +1,6 @@
+import 'package:exchange_rate_calculator/data/exchange_rate.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'ui/MyHomePage.dart';
 
@@ -11,12 +13,15 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Exchange Rate Calculator',
-      theme: ThemeData(
-        primarySwatch: Colors.indigo,
+    return ChangeNotifierProvider<ExchangeRate>(
+      create: (context) => ExchangeRate(),
+      child: MaterialApp(
+        title: 'Exchange Rate Calculator',
+        theme: ThemeData(
+          primarySwatch: Colors.indigo,
+        ),
+        home: MyHomePage(title: 'Exchange Rate Calculator'),
       ),
-      home: MyHomePage(title: 'Exchange Rate Calculator'),
     );
   }
 }

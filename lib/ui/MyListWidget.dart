@@ -27,8 +27,7 @@ class _MyListWidgetState extends State<MyListWidget> {
       itemBuilder: (context, index) {
         final formatCurrency = NumberFormat.simpleCurrency(
             decimalDigits: 2,
-            locale:
-                ExchangeRate.currencyLocale[filteredRates[index].keys.first]);
+            locale: currencyLocale[filteredRates[index].keys.first]);
         return Card(
           key: Key('$index'),
           margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
