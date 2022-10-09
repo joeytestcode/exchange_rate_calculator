@@ -4,14 +4,8 @@ import 'package:intl/intl.dart';
 import '../data/exchange_rate.dart';
 
 class MyListWidget extends StatefulWidget {
-  MyListWidget(
-      {super.key,
-      required this.rates,
-      required this.money,
-      required this.selectedCurrency});
-  final List<Map<String, double>> rates;
-  double money;
-  String selectedCurrency;
+  const MyListWidget({super.key, required this.exchangeRate});
+  final ExchangeRate exchangeRate;
 
   @override
   State<MyListWidget> createState() => _MyListWidgetState();
@@ -20,14 +14,19 @@ class MyListWidget extends StatefulWidget {
 class _MyListWidgetState extends State<MyListWidget> {
   @override
   Widget build(BuildContext context) {
-    final List<Map<String, double>> filteredRates =
-        _filterSelected(widget.rates);
+    List<String> listForListView = widget.exchangeRate.rates.keys
+        .where(
+          (element) =>
+              element != widget.exchangeRate.selectedCurrency &&
+              !widget.exchangeRate.filter.contains(element),
+        )
+        .toList();
     return ReorderableListView.builder(
-      itemCount: filteredRates.length,
+      itemCount: listForListView.length,
       itemBuilder: (context, index) {
+        final String currency = listForListView[index];
         final formatCurrency = NumberFormat.simpleCurrency(
-            decimalDigits: 2,
-            locale: currencyLocale[filteredRates[index].keys.first]);
+            name: currency.toUpperCase(), decimalDigits: 2);
         return Card(
           key: Key('$index'),
           margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
@@ -37,18 +36,22 @@ class _MyListWidgetState extends State<MyListWidget> {
             style: ListTileStyle.drawer,
             title: Row(
               children: [
-                Text(filteredRates[index].keys.first),
                 Expanded(
-                  flex: 10,
+                  flex: 30,
+                  child: Text(widget.exchangeRate.currencies[currency] ?? ''),
+                ),
+                Expanded(
+                  flex: 20,
                   child: Align(
                     alignment: Alignment.centerRight,
-                    child: Text(formatCurrency.format(widget.money /
-                        _getSelectedCurrencyValue(
-                            widget.rates, widget.selectedCurrency) *
-                        filteredRates[index].values.first)),
+                    child: Text(formatCurrency.format(
+                        widget.exchangeRate.money /
+                            widget.exchangeRate
+                                .rates[widget.exchangeRate.selectedCurrency]! *
+                            widget.exchangeRate.rates[currency]!)),
                   ),
                 ),
-                const Spacer(flex: 1),
+                const Spacer(flex: 2),
               ],
             ),
           ),
@@ -59,40 +62,10 @@ class _MyListWidgetState extends State<MyListWidget> {
           if (newIndex > oldIndex) {
             newIndex = newIndex - 1;
           }
-          final rate = filteredRates.removeAt(oldIndex);
-          filteredRates.insert(newIndex, rate);
+          final rate = listForListView.removeAt(oldIndex);
+          listForListView.insert(newIndex, rate);
         });
       },
     );
-  }
-
-  double _getSelectedCurrencyValue(List<Map> rates, currencyLocale) {
-    for (var e in rates) {
-      if (e.containsKey(currencyLocale)) {
-        return e.values.first;
-      }
-    }
-    return -1.0;
-  }
-
-  int _getSelectedIndex(List<Map> rates, String selectedCurrency) {
-    int selectedIndex = -1;
-    rates.asMap().forEach((key, value) {
-      if (value.containsKey(selectedCurrency)) {
-        selectedIndex = key;
-      }
-    });
-    return selectedIndex;
-  }
-
-  List<Map<String, double>> _filterSelected(List<Map<String, double>> rates) {
-    final List<Map<String, double>> result = List.from(rates);
-
-    for (var e in rates) {
-      if (e.containsKey(widget.selectedCurrency)) {
-        result.remove(e);
-      }
-    }
-    return result;
   }
 }

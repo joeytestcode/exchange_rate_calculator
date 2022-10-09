@@ -1,3 +1,4 @@
+import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -9,16 +10,11 @@ class MyInputWidget extends StatefulWidget {
     super.key,
     required this.onChangeCurrency,
     required this.onChangeMoney,
-    required this.rates,
-    required this.initialSelectedCurrency,
-    required this.initialMoney,
+    required this.exchangeRate,
   });
   final Function onChangeCurrency;
   final Function onChangeMoney;
-  final List<Map<String, double>> rates;
-
-  final String initialSelectedCurrency;
-  final double initialMoney;
+  final ExchangeRate exchangeRate;
 
   @override
   State<MyInputWidget> createState() => _MyInputWidgetState();
@@ -26,87 +22,93 @@ class MyInputWidget extends StatefulWidget {
 
 class _MyInputWidgetState extends State<MyInputWidget> {
   final TextEditingController _controller = TextEditingController();
-  late String _selectedCurrency;
-  late double _money;
 
   @override
   void initState() {
-    _selectedCurrency = widget.initialSelectedCurrency;
-    _money = widget.initialMoney;
-    _controller.text = _getFormattedCurrencyString(_money, _selectedCurrency);
+    _controller.text = _getFormattedCurrencyString(
+        widget.exchangeRate.money, widget.exchangeRate.selectedCurrency);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration:
-          BoxDecoration(color: Theme.of(context).colorScheme.background),
-      child: Row(
-        children: [
-          DropdownButton(
-            underline: Container(),
-            dropdownColor: Theme.of(context).colorScheme.background,
-            value: _selectedCurrency,
-            items: widget.rates
-                .map((e) => DropdownMenuItem(
-                    value: e.keys.first,
-                    child: Text(
-                      ' ${e.keys.first}',
-                      style: const TextStyle(
-                        fontSize: 14,
-                      ),
-                    )))
-                .toList(),
-            onChanged: (String? selected) {
-              if (selected != null) {
-                _selectedCurrency = selected;
-                widget.onChangeCurrency(selected);
-                _controller.text =
-                    _getFormattedCurrencyString(_money, _selectedCurrency);
-              }
-            },
-          ),
-          Expanded(
-            flex: 10,
-            child: Padding(
-              padding: const EdgeInsets.all(7.0),
-              child: TextFormField(
-                enableInteractiveSelection: true,
-                autofocus: true,
-                decoration:
-                    const InputDecoration(contentPadding: EdgeInsets.all(2)),
-                controller: _controller,
-                cursorColor: Colors.white,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-                // initialValue: _money.toString(),
-                maxLines: 1,
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'[\d\.]'))
-                ],
-                textAlign: TextAlign.right,
-                onTap: () {
-                  _selectAllText(_controller);
-                },
-                onChanged: (value) {
-                  _money = _parseInputStringToDouble(value);
-                  widget.onChangeMoney(_money);
-                },
-                onEditingComplete: () {
+    var listOfCurrencies = widget.exchangeRate.rates.keys
+        .where(
+          (element) => !widget.exchangeRate.filter.contains(element),
+        )
+        .toList();
+    return Column(
+      children: [
+        Row(
+          children: [
+            DropdownButton(
+              underline: Container(),
+              dropdownColor: Theme.of(context).colorScheme.background,
+              value: widget.exchangeRate.selectedCurrency,
+              items: listOfCurrencies
+                  .map((element) => DropdownMenuItem(
+                      value: element,
+                      child: Text(
+                        ' ${widget.exchangeRate.currencies[element]}',
+                        style: const TextStyle(
+                            fontSize: 14, fontWeight: FontWeight.bold),
+                      )))
+                  .toList(),
+              onChanged: (String? selected) {
+                if (selected != null) {
+                  widget.exchangeRate.selectedCurrency = selected;
+                  widget.onChangeCurrency(selected);
                   _controller.text = _getFormattedCurrencyString(
-                      _parseInputStringToDouble(_controller.text),
-                      _selectedCurrency);
-                  _selectAllText(_controller);
+                      widget.exchangeRate.money, selected);
+                }
+              },
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 7),
+              child: ElevatedButton(
+                child: Center(
+                    child: Text('Updated in\n${widget.exchangeRate.date} ')),
+                onPressed: () {
+                  widget.exchangeRate.readRate();
                 },
               ),
+            )
+          ],
+        ),
+        Padding(
+          padding: const EdgeInsets.all(7.0),
+          child: TextFormField(
+            enableInteractiveSelection: true,
+            autofocus: true,
+            decoration:
+                const InputDecoration(contentPadding: EdgeInsets.all(2)),
+            controller: _controller,
+            cursorColor: Colors.white,
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
             ),
+            maxLines: 1,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.allow(RegExp(r'[\d\.]'))
+            ],
+            textAlign: TextAlign.right,
+            onTap: () {
+              _selectAllText(_controller);
+            },
+            onChanged: (value) {
+              widget.onChangeMoney(_parseInputStringToDouble(value));
+            },
+            onEditingComplete: () {
+              _controller.text = _getFormattedCurrencyString(
+                  _parseInputStringToDouble(_controller.text),
+                  widget.exchangeRate.selectedCurrency);
+              _selectAllText(_controller);
+            },
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -114,7 +116,7 @@ class _MyInputWidgetState extends State<MyInputWidget> {
     if (value.isEmpty) {
       return 0;
     } else {
-      return double.parse(value);
+      return double.parse(value.replaceAll(RegExp(r'[^\d.]+'), ''));
     }
   }
 
@@ -127,7 +129,7 @@ class _MyInputWidgetState extends State<MyInputWidget> {
 
   String _getFormattedCurrencyString(double money, String locale) {
     final formatCurrency = NumberFormat.simpleCurrency(
-        decimalDigits: 2, locale: currencyLocale[locale]);
+        name: locale.toUpperCase(), decimalDigits: 2);
     return formatCurrency.format(money);
   }
 }
