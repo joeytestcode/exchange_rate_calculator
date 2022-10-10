@@ -1,4 +1,3 @@
-import 'package:country_list_pick/country_list_pick.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -32,44 +31,46 @@ class _MyInputWidgetState extends State<MyInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var listOfCurrencies = widget.exchangeRate.rates.keys
+    ExchangeRate exchangeRate = widget.exchangeRate;
+    var listOfCurrencies = exchangeRate.currencies.keys
         .where(
-          (element) => !widget.exchangeRate.filter.contains(element),
+          (element) => !exchangeRate.filter.contains(element),
         )
         .toList();
     return Column(
       children: [
         Row(
           children: [
-            DropdownButton(
-              underline: Container(),
-              dropdownColor: Theme.of(context).colorScheme.background,
-              value: widget.exchangeRate.selectedCurrency,
-              items: listOfCurrencies
-                  .map((element) => DropdownMenuItem(
-                      value: element,
-                      child: Text(
-                        ' ${widget.exchangeRate.currencies[element]}',
-                        style: const TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.bold),
-                      )))
-                  .toList(),
-              onChanged: (String? selected) {
-                if (selected != null) {
-                  widget.exchangeRate.selectedCurrency = selected;
-                  widget.onChangeCurrency(selected);
-                  _controller.text = _getFormattedCurrencyString(
-                      widget.exchangeRate.money, selected);
-                }
-              },
+            Expanded(
+              child: DropdownButton(
+                underline: Container(),
+                dropdownColor: Theme.of(context).colorScheme.background,
+                value: exchangeRate.selectedCurrency,
+                items: listOfCurrencies
+                    .map((element) => DropdownMenuItem(
+                        value: element,
+                        child: Text(
+                          ' ${widget.exchangeRate.currencies[element]}',
+                          style: const TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.bold),
+                        )))
+                    .toList(),
+                onChanged: (String? selected) {
+                  if (selected != null) {
+                    exchangeRate.selectedCurrency = selected;
+                    widget.onChangeCurrency(selected);
+                    _controller.text = _getFormattedCurrencyString(
+                        exchangeRate.money, selected);
+                  }
+                },
+              ),
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 7),
               child: ElevatedButton(
-                child: Center(
-                    child: Text('Updated in\n${widget.exchangeRate.date} ')),
+                child: Center(child: Text('Updated in\n${exchangeRate.date} ')),
                 onPressed: () {
-                  widget.exchangeRate.readRate();
+                  exchangeRate.readRate();
                 },
               ),
             )
@@ -103,7 +104,7 @@ class _MyInputWidgetState extends State<MyInputWidget> {
             onEditingComplete: () {
               _controller.text = _getFormattedCurrencyString(
                   _parseInputStringToDouble(_controller.text),
-                  widget.exchangeRate.selectedCurrency);
+                  exchangeRate.selectedCurrency);
               _selectAllText(_controller);
             },
           ),

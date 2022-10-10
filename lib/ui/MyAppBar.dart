@@ -53,8 +53,8 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 Provider.of<ExchangeRate>(context, listen: false).readRate();
                 break;
               case 1:
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: ((context) => MySettings())));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: ((context) => const MySettings())));
                 break;
               case 2:
                 break;

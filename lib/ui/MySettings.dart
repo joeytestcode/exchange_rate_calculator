@@ -1,26 +1,64 @@
+import 'package:exchange_rate_calculator/data/exchange_rate.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
-class MySettings extends StatefulWidget {
+class MySettings extends StatelessWidget {
   const MySettings({super.key});
 
   @override
-  State<MySettings> createState() => _MySettingState();
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Settings')),
+      body: Column(
+        children: const [
+          MyFilterListWidget(),
+        ],
+      ),
+    );
+  }
 }
 
-class _MySettingState extends State<MySettings> {
+class MyFilterListWidget extends StatelessWidget {
+  const MyFilterListWidget({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return Container();
-  }
+    return Consumer<ExchangeRate>(
+      builder: (context, exchangeRate, child) {
+        List<String> currencyKeys = exchangeRate.currencies.keys.toList();
 
-  Future<void> setReferences(List<String> list) async {
-    final prefs = await SharedPreferences.getInstance();
-    prefs.setStringList('selectedCurrency', list);
-  }
-
-  Future<List<String>> getReferences() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getStringList('selectedCurrency') ?? [];
+        return Expanded(
+          child: ListView.builder(
+            itemCount: currencyKeys.length,
+            itemBuilder: (context, index) {
+              bool isChecked =
+                  !exchangeRate.filter.contains(currencyKeys[index]);
+              return ListTile(
+                title: Text(
+                    exchangeRate.currencies[currencyKeys[index]].toString()),
+                trailing: Checkbox(
+                  value: isChecked,
+                  onChanged: (value) {
+                    if (value != null) {
+                      isChecked = value;
+                      if (value) {
+                        if (exchangeRate.filter.contains(currencyKeys[index])) {
+                          exchangeRate.removeFilter(currencyKeys[index]);
+                        }
+                      } else {
+                        if (!exchangeRate.filter
+                            .contains(currencyKeys[index])) {
+                          exchangeRate.addFilter(currencyKeys[index]);
+                        }
+                      }
+                    }
+                  },
+                ),
+              );
+            },
+          ),
+        );
+      },
+    );
   }
 }

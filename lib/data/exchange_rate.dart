@@ -667,13 +667,17 @@ class ExchangeRate extends ChangeNotifier {
   }
 
   late Future<bool> isReady;
+
   Future<bool> getInitialValues() async {
     try {
       var prefs = await SharedPreferences.getInstance();
       _money = prefs.getDouble(KeyOfPreference.money.name) ?? _defaultMoney;
       _date = prefs.getString(KeyOfPreference.date.name) ?? _defaultDate;
-      _filter =
+
+      var tempFilter =
           prefs.getStringList(KeyOfPreference.filter.name) ?? _defaultFilter;
+      _filter.clear();
+      _filter.addAll(tempFilter);
 
       var tempCurrencies =
           prefs.getStringList(KeyOfPreference.currencies.name) ??
@@ -749,14 +753,26 @@ class ExchangeRate extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<String> _filter = ["1inch"];
+  List<String> _filter = [];
   List<String> get filter => _filter;
-  set filter(newFilter) => setFilter(newFilter);
 
-  void setFilter(List<String> filter) {
-    _filter.clear();
-    _filter.addAll(filter);
+  void addFilter(String currency) {
+    if (currencies.keys.contains(currency) && !filter.contains(currency)) {
+      _filter.add(currency);
+      if (_selectedCurrency == currency) {
+        _selectedCurrency = _currencies.keys
+            .where((element) => !filter.contains(element))
+            .toList()[0];
+      }
+      notifyListeners();
+      _setValueTOPreference(KeyOfPreference.filter, _filter);
+    }
+  }
+
+  void removeFilter(String currency) {
+    _filter.remove(currency);
     notifyListeners();
+    _setValueTOPreference(KeyOfPreference.filter, _filter);
   }
 
   Future<void> readRate() async {
