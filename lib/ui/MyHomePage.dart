@@ -20,32 +20,20 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: MyAppBar(widget: widget),
       body: Center(
-        child: Consumer<ExchangeRate>(
-          builder: (context, exchangeRate, child) {
-            return FutureBuilder(
-                future: exchangeRate.isReady,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData && snapshot.data == true) {
-                    return Column(
-                      children: [
-                        MyListWidget(
-                          exchangeRate: exchangeRate,
-                        ),
-                        MyInputWidget(
-                          onChangeCurrency: (String currency) =>
-                              exchangeRate.selectedCurrency = currency,
-                          onChangeMoney: (double money) =>
-                              exchangeRate.money = money,
-                          exchangeRate: exchangeRate,
-                        ),
-                      ],
-                    );
-                  } else {
-                    return const CircularProgressIndicator();
-                  }
-                });
-          },
-        ),
+        child: FutureBuilder(
+            future: Provider.of<ExchangeRate>(context, listen: false).isReady,
+            builder: (context, snapshot) {
+              if (snapshot.hasData && snapshot.data == true) {
+                return Column(
+                  children: [
+                    MyListWidget(),
+                    MyInputWidget(),
+                  ],
+                );
+              } else {
+                return const CircularProgressIndicator();
+              }
+            }),
       ),
     );
   }

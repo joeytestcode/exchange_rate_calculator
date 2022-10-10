@@ -657,7 +657,8 @@ enum KeyOfPreference {
   currencies,
   fullNames,
   rates,
-  filter
+  filter,
+  orderedList,
 }
 
 class ExchangeRate extends ChangeNotifier {
@@ -707,6 +708,16 @@ class ExchangeRate extends ChangeNotifier {
             )
             .toList()[0];
       }
+      var tempOrderedList =
+          prefs.getStringList(KeyOfPreference.orderedList.name) ?? [];
+      if (tempOrderedList.length != _currencies.length - _filter.length - 1) {
+        tempOrderedList = _currencies.keys
+            .where((element) =>
+                !_filter.contains(element) && element != _selectedCurrency)
+            .toList();
+      }
+      _orderedList.clear();
+      _orderedList.addAll(tempOrderedList);
     } on Exception catch (e) {
       await readRate();
     }
@@ -730,9 +741,12 @@ class ExchangeRate extends ChangeNotifier {
   String get selectedCurrency => _selectedCurrency;
 
   set selectedCurrency(String value) {
+    _orderedList.insert(0, _selectedCurrency);
+    _orderedList.remove(value);
     _selectedCurrency = value;
     notifyListeners();
     _setValueTOPreference(KeyOfPreference.selectedCurrency, value);
+    _setValueTOPreference(KeyOfPreference.orderedList, _orderedList);
   }
 
   late double _money;
@@ -749,11 +763,11 @@ class ExchangeRate extends ChangeNotifier {
 
   set date(String value) {
     _date = value;
-    _setValueTOPreference(KeyOfPreference.date, value);
     notifyListeners();
+    _setValueTOPreference(KeyOfPreference.date, value);
   }
 
-  List<String> _filter = [];
+  final List<String> _filter = [];
   List<String> get filter => _filter;
 
   void addFilter(String currency) {
@@ -764,15 +778,33 @@ class ExchangeRate extends ChangeNotifier {
             .where((element) => !filter.contains(element))
             .toList()[0];
       }
+      _orderedList.remove(currency);
       notifyListeners();
       _setValueTOPreference(KeyOfPreference.filter, _filter);
+      _setValueTOPreference(KeyOfPreference.orderedList, _orderedList);
     }
   }
 
   void removeFilter(String currency) {
     _filter.remove(currency);
+    _orderedList.add(currency);
     notifyListeners();
     _setValueTOPreference(KeyOfPreference.filter, _filter);
+    _setValueTOPreference(KeyOfPreference.orderedList, _orderedList);
+  }
+
+  final List<String> _orderedList = [];
+  List<String> get orderedList => _orderedList;
+
+  void insertToOrderedList(int index, String element) {
+    _orderedList.insert(index, element);
+    _setValueTOPreference(KeyOfPreference.orderedList, _orderedList);
+  }
+
+  String removeAtFromOrderedList(int index) {
+    var result = _orderedList.removeAt(index);
+    _setValueTOPreference(KeyOfPreference.orderedList, _orderedList);
+    return result;
   }
 
   Future<void> readRate() async {
@@ -822,7 +854,8 @@ class ExchangeRate extends ChangeNotifier {
         } else if (key == KeyOfPreference.filter ||
             key == KeyOfPreference.currencies ||
             key == KeyOfPreference.fullNames ||
-            key == KeyOfPreference.rates) {
+            key == KeyOfPreference.rates ||
+            key == KeyOfPreference.orderedList) {
           value.setStringList(key.name, data as List<String>);
         } else {
           value.setString(key.name, data);
