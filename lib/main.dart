@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:exchange_rate_calculator/data/exchange_rate.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
