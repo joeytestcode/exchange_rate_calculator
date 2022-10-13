@@ -14,25 +14,45 @@ class MySettings extends StatelessWidget {
   }
 }
 
-class MyFilterListWidget extends StatelessWidget {
+class MyFilterListWidget extends StatefulWidget {
   const MyFilterListWidget({super.key});
+
+  @override
+  State<MyFilterListWidget> createState() => _MyFilterListWidgetState();
+}
+
+class _MyFilterListWidgetState extends State<MyFilterListWidget> {
+  String _query = '';
+
+  void _onChanged(String value) {
+    setState(() {
+      _query = value;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ExchangeRate>(
       builder: (context, exchangeRate, child) {
         List<String> currencyKeys = exchangeRate.currencies.keys.toList();
+        List<String> filteredKeys = List.from(currencyKeys
+            .where(
+              (element) => exchangeRate.currencies[element]!
+                  .toLowerCase()
+                  .contains(_query.toLowerCase()),
+            )
+            .toList());
 
         return Column(
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: currencyKeys.length,
+                itemCount: filteredKeys.length,
                 itemBuilder: (context, index) {
                   bool isChecked =
-                      !exchangeRate.filter.contains(currencyKeys[index]);
+                      !exchangeRate.filter.contains(filteredKeys[index]);
                   return ListTile(
-                    title: Text(exchangeRate.currencies[currencyKeys[index]]
+                    title: Text(exchangeRate.currencies[filteredKeys[index]]
                         .toString()),
                     trailing: Checkbox(
                       value: isChecked,
@@ -41,13 +61,13 @@ class MyFilterListWidget extends StatelessWidget {
                           isChecked = value;
                           if (value) {
                             if (exchangeRate.filter
-                                .contains(currencyKeys[index])) {
-                              exchangeRate.removeFilter(currencyKeys[index]);
+                                .contains(filteredKeys[index])) {
+                              exchangeRate.removeFilter(filteredKeys[index]);
                             }
                           } else {
                             if (!exchangeRate.filter
-                                .contains(currencyKeys[index])) {
-                              exchangeRate.addFilter(currencyKeys[index]);
+                                .contains(filteredKeys[index])) {
+                              exchangeRate.addFilter(filteredKeys[index]);
                             }
                           }
                         }
@@ -57,6 +77,9 @@ class MyFilterListWidget extends StatelessWidget {
                 },
               ),
             ),
+            SearchView(
+              onSearch: _onChanged,
+            )
           ],
         );
       },
@@ -64,14 +87,55 @@ class MyFilterListWidget extends StatelessWidget {
   }
 }
 
-class SearchView extends StatelessWidget {
-  const SearchView({super.key});
+class SearchView extends StatefulWidget {
+  const SearchView(
+      {Key? key, this.enableSearchOnTextChange = true, required this.onSearch})
+      : super(key: key);
+
+  final bool enableSearchOnTextChange;
+  final Function(String) onSearch;
+  @override
+  State<SearchView> createState() => _SearchViewState();
+}
+
+class _SearchViewState extends State<SearchView> {
+  final _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      autocorrect: true,
-      onChanged: (value) {},
+    return Row(
+      children: [
+        Expanded(
+            child: Padding(
+          padding: const EdgeInsets.fromLTRB(7, 0, 0, 0),
+          child: TextField(
+            autofocus: true,
+            controller: _controller,
+            onSubmitted: widget.onSearch,
+            onChanged: widget.enableSearchOnTextChange ? widget.onSearch : null,
+            decoration: InputDecoration(
+              fillColor: Colors.blueGrey.shade50,
+              filled: true,
+              prefixIcon: IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: () {
+                  widget.onSearch(_controller.text);
+                },
+              ),
+              suffixIcon: IconButton(
+                onPressed: () {
+                  _controller.text = '';
+                  widget.onSearch('');
+                },
+                icon: const Icon(
+                  Icons.clear_outlined,
+                  color: Colors.grey,
+                ),
+              ),
+            ),
+          ),
+        )),
+      ],
     );
   }
 }
