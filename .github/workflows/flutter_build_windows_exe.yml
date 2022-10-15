@@ -1,9 +1,9 @@
 name: Build windows exe
 
-on: 
+on:
   push:
-    tags:
-    - '*'
+    branches: [ "master" ]
+
 
 jobs:
   build_android:

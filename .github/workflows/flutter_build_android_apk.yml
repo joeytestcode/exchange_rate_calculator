@@ -1,10 +1,9 @@
 name: Build android apk
 
-on: 
+on:
   push:
-    tags:
-    - '*'
-    
+    branches: [ "master" ]
+
 jobs:
   build_android:
     runs-on: ubuntu-latest
