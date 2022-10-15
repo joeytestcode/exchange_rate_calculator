@@ -16,6 +16,6 @@ jobs:
           channel: 'master'
       - run: flutter pub get
       - run: flutter build apk --release
-      - run: mkdir -p results
-      - run: mv build/app/outputs/flutter-apk/app-release.apk results/${{github.event.repository.name}}.apk
+      - run: mkdir -p ../results
+      - run: mv build/app/outputs/flutter-apk/app-release.apk ../results/${{github.event.repository.name}}.apk
       - run: git push
