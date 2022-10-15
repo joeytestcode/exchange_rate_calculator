@@ -27,7 +27,7 @@ class _MyListWidgetState extends State<MyListWidget> {
               margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
               elevation: 2,
               child: ListTile(
-                tileColor: Theme.of(context).colorScheme.onBackground,
+                // tileColor: Theme.of(context).colorScheme.onBackground,
                 style: ListTileStyle.drawer,
                 title: Row(
                   children: [

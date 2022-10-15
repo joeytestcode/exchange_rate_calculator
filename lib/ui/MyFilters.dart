@@ -2,8 +2,8 @@ import 'package:exchange_rate_calculator/data/exchange_rate.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class MySettings extends StatelessWidget {
-  const MySettings({super.key});
+class MyFilters extends StatelessWidget {
+  const MyFilters({super.key});
 
   @override
   Widget build(BuildContext context) {

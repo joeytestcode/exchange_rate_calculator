@@ -16,9 +16,7 @@ class MyApp extends StatelessWidget {
       create: (context) => ExchangeRate(),
       child: MaterialApp(
         title: 'Exchange Rate Calculator',
-        theme: ThemeData(
-          primarySwatch: Colors.indigo,
-        ),
+        theme: ThemeData.dark(),
         home: const MyHomePage(title: 'Exchange Rate Calculator'),
       ),
     );
