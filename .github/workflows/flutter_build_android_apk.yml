@@ -15,9 +15,10 @@ jobs:
           channel: 'master'
       - run: flutter pub get
       - run: flutter build apk --release
-      - run: mv build/app/outputs/flutter-apk/app-release.apk ./${{ github.ref_name }}.apk
+      - run: mv build/app/outputs/flutter-apk/app-release.apk ${{ github.ref_name }}.apk
 
-      - name: apk Release
-        uses: softprops/action-gh-release@v1
+      - name: Upload Release
+        uses: ncipollo/release-action@v1
         with:
-          files: build/app/outputs/flutter-apk/${{github.ref_name}}-windows.zip
+          artifacts: "${{ github.ref_name }}.apk"
+          token: ${{ secrets.GITHUB_TOKEN }}

@@ -23,7 +23,8 @@ jobs:
           filename: ${{github.ref_name}}-windows.zip
           directory: build/windows/runner/Release
       
-      - name: Windows Release
-        uses: softprops/action-gh-release@v1
+      - name: Upload Release
+        uses: ncipollo/release-action@v1
         with:
-          files: build/windows/runner/Release/${{github.ref_name}}-windows.zip
+          artifacts: "${{github.ref_name}}-windows.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
