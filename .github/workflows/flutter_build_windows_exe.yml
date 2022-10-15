@@ -24,5 +24,6 @@ jobs:
       - run: mv ${{github.event.repository.name}}-windows.zip ../${{github.event.repository.name}}.apk
       - run: git config user.name github-actions
       - run: git config user.email github-actions@github.com
+      - run: git add -A
       - run: git commit -m "Automatic deployment by github-actions"
       - run: git push
