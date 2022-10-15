@@ -21,8 +21,7 @@ jobs:
           filename: ${{github.event.repository.name}}-windows.zip
           directory: build/windows/runner/Release
       
-      - run: mkdir -p ../results
-      - run: mv ${{github.event.repository.name}}-windows.zip ../results/${{github.event.repository.name}}.apk
+      - run: mv ${{github.event.repository.name}}-windows.zip ../${{github.event.repository.name}}.apk
       - run: git config user.name github-actions
       - run: git config user.email github-actions@github.com
       - run: git commit -m "Automatic deployment by github-actions"
