@@ -1,4 +1,5 @@
 import 'package:exchange_rate_calculator/data/exchange_rate.dart';
+import 'package:exchange_rate_calculator/ui/MyAbout.dart';
 import 'package:exchange_rate_calculator/ui/MyFilters.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -57,6 +58,10 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                     builder: ((context) => const MyFilters())));
                 break;
               case 2:
+                showDialog(
+                  context: context,
+                  builder: (context) => const AlertDialog(content: MyAbout()),
+                );
                 break;
               default:
                 break;
