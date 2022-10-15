@@ -19,6 +19,7 @@ jobs:
 
       - name: Upload Release
         uses: ncipollo/release-action@v1
+        tags: '*'
         with:
           artifacts: "${{ github.ref_name }}.apk"
           token: ${{ secrets.GITHUB_TOKEN }}
