@@ -42,7 +42,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: Row(
                     children: const [
                       Icon(Icons.question_mark, color: Colors.blue),
-                      Text('  About'),
+                      Text('  About...'),
                     ],
                   )),
             ];
