@@ -26,7 +26,6 @@ jobs:
       
       - name: Upload Release
         uses: ncipollo/release-action@v1
-        tags: '*'
         with:
           artifacts: "${{github.ref_name}}-windows.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
