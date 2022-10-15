@@ -4,7 +4,7 @@ on:
   push:
     tags:
     - '*'
-    
+
 
 jobs:
   build_android:
@@ -17,10 +17,10 @@ jobs:
           channel: 'master'
       - run: flutter pub get
       - run: flutter build apk --release
-      - run: mv build/app/outputs/flutter-apk/app-release.apk ${{ github.ref_name }}.apk
+      - run: mv build/app/outputs/flutter-apk/app-release.apk ${{github.event.repository.name}}.apk
 
       - name: Upload Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "${{ github.ref_name }}.apk"
+          artifacts: "${{github.event.repository.name}}.apk"
           token: ${{ secrets.GITHUB_TOKEN }}

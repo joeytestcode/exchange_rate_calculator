@@ -4,7 +4,7 @@ on:
   push:
     tags:
     - '*'
-    
+
 
 jobs:
   build_android:
@@ -22,11 +22,11 @@ jobs:
         uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
-          filename: ${{github.ref_name}}-windows.zip
+          filename: ${{github.event.repository.name}}-windows.zip
           directory: build/windows/runner/Release
       
       - name: Upload Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "${{github.ref_name}}-windows.zip"
+          artifacts: "${{github.event.repository.name}}-windows.zip"
           token: ${{ secrets.GITHUB_TOKEN }}
