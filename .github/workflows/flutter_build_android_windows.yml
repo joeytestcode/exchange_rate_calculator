@@ -40,7 +40,7 @@ jobs:
       - run: flutter pub get
       - run: flutter config --enable-android
       - run: flutter build apk --release
-      - run: move build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${{github.event.repository.name}}.apk
+      - run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${{github.event.repository.name}}.apk
       - run: git config user.name github-actions
       - run: git config user.email github-actions@github.com
       - run: git --work-tree build/app/outputs/flutter-apk add --all
