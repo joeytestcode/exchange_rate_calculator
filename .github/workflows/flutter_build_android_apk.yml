@@ -1,8 +1,9 @@
 name: Build android apk
 
-on:
+on: 
   push:
-    branches: [ "master" ]
+    tags:
+    - '*'
 
 jobs:
   build_android:
