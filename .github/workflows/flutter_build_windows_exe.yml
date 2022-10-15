@@ -1,10 +1,6 @@
 name: Build windows exe
 
 on: 
-  push:
-    tags:
-    - '*'
-
 
 jobs:
   build_android:
@@ -25,9 +21,4 @@ jobs:
           filename: ${{github.event.repository.name}}-windows.zip
           directory: build/windows/runner/Release
       
-      - name: Upload to release
-        uses: JasonEtco/upload-to-release@master
-        with:
-          args: ${{github.event.repository.name}}-windows.zip
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: 

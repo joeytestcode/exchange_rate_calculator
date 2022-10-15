@@ -2,8 +2,7 @@ name: Build android apk
 
 on: 
   push:
-    tags:
-    - '*'
+    branches: [ "master" ]
 
 
 jobs:
@@ -17,10 +16,6 @@ jobs:
           channel: 'master'
       - run: flutter pub get
       - run: flutter build apk --release
-
-      - name: Upload to release
-        uses: JasonEtco/upload-to-release@master
-        with:
-          args: build/app/outputs/flutter-apk/app-release.apk
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - run: mkdir -p results
+      - run: mv build/app/outputs/flutter-apk/app-release.apk results/${{github.event.repository.name}}.apk
+      - run: git push
