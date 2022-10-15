@@ -1,12 +1,13 @@
-name: Build windows exe
+name: Build android apk & windows exe
 
 on: 
   push:
     branches: [ "master" ]
 
+
 jobs:
   build_android:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
@@ -14,7 +15,8 @@ jobs:
         with:
           channel: 'master'
       - run: flutter pub get
-
+      - run: flutter build apk --release
+      - run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${{github.event.repository.name}}.apk
       - run: flutter build windows --release
       - name: Archive Release
         uses: thedoctor0/zip-release@master
@@ -22,10 +24,9 @@ jobs:
           type: 'zip'
           filename: ${{github.event.repository.name}}-windows.zip
           directory: build/windows/runner/Release
-          path: build/windows/runner
-
+      - run: mv ${{github.event.repository.name}}-windows.zip build/app/outputs/flutter-apk/${{github.event.repository.name}}-windows.zip
       - run: git config user.name github-actions
       - run: git config user.email github-actions@github.com
-      - run: git --work-tree build/windows/runner add --all
+      - run: git --work-tree build/app/outputs/flutter-apk add --all
       - run: git commit -m "Automatic deployment by github-actions"
       - run: git push origin HEAD:build --force
