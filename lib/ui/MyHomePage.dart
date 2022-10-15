@@ -25,7 +25,7 @@ class _MyHomePageState extends State<MyHomePage> {
             builder: (context, snapshot) {
               if (snapshot.hasData && snapshot.data == true) {
                 return Column(
-                  children: [
+                  children: const [
                     MyListWidget(),
                     MyInputWidget(),
                   ],

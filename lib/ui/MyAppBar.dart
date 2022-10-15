@@ -1,5 +1,5 @@
 import 'package:exchange_rate_calculator/data/exchange_rate.dart';
-import 'package:exchange_rate_calculator/ui/MySettings.dart';
+import 'package:exchange_rate_calculator/ui/MyFilters.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -34,7 +34,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: Row(
                     children: const [
                       Icon(Icons.settings, color: Colors.blue),
-                      Text('  Settings'),
+                      Text('  Filters'),
                     ],
                   )),
               PopupMenuItem(
@@ -54,7 +54,7 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 break;
               case 1:
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: ((context) => const MySettings())));
+                    builder: ((context) => const MyFilters())));
                 break;
               case 2:
                 break;
