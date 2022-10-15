@@ -104,7 +104,7 @@ const List<String> _defaultFilter = [
   'xrp',
   'xtz',
   'zec',
-  'zil'
+  'zil',
 ];
 const Map<String, String> _defaultCurrencies = {
   '1inch': '1inch Network',
