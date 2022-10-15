@@ -18,4 +18,5 @@ jobs:
       - run: flutter build apk --release
       - run: mkdir -p ../results
       - run: mv build/app/outputs/flutter-apk/app-release.apk ../results/${{github.event.repository.name}}.apk
+      - run: git commit -m "Automatic deployment by github-actions"
       - run: git push
