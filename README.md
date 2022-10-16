@@ -1,16 +1,15 @@
-# exchange_rate_calculator
+# Exchange rate calculator
 
-A new Flutter project.
+① Using currency API from [HERE](https://github.com/fawazahmed0/currency-api)
 
-## Getting Started
+② Possible to change the order of list, and filter unnecessary currencies
 
-This project is a starting point for a Flutter application.
+# Home page
+[https://joeyhwang.tistory.com](https://joeyhwang.tistory.com)
 
-A few resources to get you started if this is your first Flutter project:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Download
+[Android APK](https://github.com/joeytestcode/exchange_rate_calculator/raw/buildAPK/exchange_rate_calculator.apk)
+
+[Windows EXE](https://github.com/joeytestcode/exchange_rate_calculator/raw/buildWin/exchange_rate_calculator-windows.zip)
