@@ -1,8 +1,7 @@
+import 'package:exchange_rate_calculator/data/data_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
-import '../data/exchange_rate.dart';
 
 class MyListWidget extends StatefulWidget {
   const MyListWidget({super.key});
@@ -15,11 +14,11 @@ class _MyListWidgetState extends State<MyListWidget> {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: Consumer<ExchangeRate>(builder: (context, exchangeRate, child) {
+      child: Consumer<DataAdapter>(builder: (context, dataAdapter, child) {
         return ReorderableListView.builder(
-          itemCount: exchangeRate.orderedList.length,
+          itemCount: dataAdapter.orderedList.length - 1,
           itemBuilder: (context, index) {
-            final String currentCurrency = exchangeRate.orderedList[index];
+            final String currentCurrency = dataAdapter.orderedList[index + 1];
             final formatCurrency = NumberFormat.simpleCurrency(
                 name: currentCurrency.toUpperCase(), decimalDigits: 2);
             return Card(
@@ -27,22 +26,21 @@ class _MyListWidgetState extends State<MyListWidget> {
               margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 7),
               elevation: 2,
               child: ListTile(
-                // tileColor: Theme.of(context).colorScheme.onBackground,
                 style: ListTileStyle.drawer,
                 title: Row(
                   children: [
                     Expanded(
                       flex: 30,
                       child:
-                          Text(exchangeRate.currencies[currentCurrency] ?? ''),
+                          Text(dataAdapter.currencies[currentCurrency] ?? ''),
                     ),
                     Expanded(
                       flex: 20,
                       child: Align(
                         alignment: Alignment.centerRight,
-                        child: Text(formatCurrency.format(exchangeRate.money /
-                            exchangeRate.rates[exchangeRate.selectedCurrency]! *
-                            exchangeRate.rates[currentCurrency]!)),
+                        child: Text(formatCurrency.format(dataAdapter.money /
+                            dataAdapter.rates[dataAdapter.selectedCurrency]! *
+                            dataAdapter.rates[currentCurrency]!)),
                       ),
                     ),
                     const Spacer(flex: 2),
@@ -53,11 +51,11 @@ class _MyListWidgetState extends State<MyListWidget> {
           },
           onReorder: (int oldIndex, int newIndex) {
             setState(() {
-              if (newIndex > oldIndex) {
-                newIndex = newIndex - 1;
+              if (newIndex <= oldIndex) {
+                newIndex = newIndex + 1;
               }
-              final rate = exchangeRate.removeAtFromOrderedList(oldIndex);
-              exchangeRate.insertToOrderedList(newIndex, rate);
+              final rate = dataAdapter.removeAtFromOrderedList(oldIndex + 1);
+              dataAdapter.insertToOrderedList(newIndex, rate);
             });
           },
         );

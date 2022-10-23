@@ -1,6 +1,7 @@
-import 'package:exchange_rate_calculator/data/exchange_rate.dart';
+import 'package:exchange_rate_calculator/data/data_adapter.dart';
 import 'package:exchange_rate_calculator/ui/MyAbout.dart';
 import 'package:exchange_rate_calculator/ui/MyFilters.dart';
+import 'package:exchange_rate_calculator/ui/MyLanguageSelect.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -42,6 +43,14 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                   value: 2,
                   child: Row(
                     children: const [
+                      Icon(Icons.settings, color: Colors.blue),
+                      Text('  Language'),
+                    ],
+                  )),
+              PopupMenuItem(
+                  value: 1000,
+                  child: Row(
+                    children: const [
                       Icon(Icons.question_mark, color: Colors.blue),
                       Text('  About...'),
                     ],
@@ -51,13 +60,22 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
           onSelected: (value) {
             switch (value) {
               case 0:
-                Provider.of<ExchangeRate>(context, listen: false).readRate();
+                Provider.of<DataAdapter>(context, listen: false).readRate();
                 break;
               case 1:
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: ((context) => const MyFilters())));
                 break;
               case 2:
+                showDialog(
+                  context: context,
+                  builder: (context) => const AlertDialog(
+                    title: Text('Select Language...'),
+                    content: MyLanguageSelect(),
+                  ),
+                );
+                break;
+              case 1000:
                 showDialog(
                   context: context,
                   builder: (context) => const AlertDialog(content: MyAbout()),

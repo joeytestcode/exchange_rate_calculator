@@ -1,9 +1,8 @@
+import 'package:exchange_rate_calculator/data/data_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-
-import '../data/exchange_rate.dart';
 
 class MyInputWidget extends StatefulWidget {
   const MyInputWidget({super.key});
@@ -17,21 +16,15 @@ class _MyInputWidgetState extends State<MyInputWidget> {
 
   @override
   void initState() {
-    ExchangeRate exchangeRate =
-        Provider.of<ExchangeRate>(context, listen: false);
+    DataAdapter dataAdapter = Provider.of<DataAdapter>(context, listen: false);
     _controller.text = _getFormattedCurrencyString(
-        exchangeRate.money, exchangeRate.selectedCurrency);
+        dataAdapter.money, dataAdapter.selectedCurrency);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ExchangeRate>(builder: (context, exchangeRate, child) {
-      var listOfCurrencies = exchangeRate.currencies.keys
-          .where(
-            (element) => !exchangeRate.filter.contains(element),
-          )
-          .toList();
+    return Consumer<DataAdapter>(builder: (context, dataAdapter, child) {
       return Column(
         children: [
           Row(
@@ -40,21 +33,21 @@ class _MyInputWidgetState extends State<MyInputWidget> {
                 child: DropdownButton(
                   underline: Container(),
                   dropdownColor: Theme.of(context).colorScheme.background,
-                  value: exchangeRate.selectedCurrency,
-                  items: listOfCurrencies
+                  value: dataAdapter.selectedCurrency,
+                  items: dataAdapter.orderedList
                       .map((element) => DropdownMenuItem(
                           value: element,
                           child: Text(
-                            ' ${exchangeRate.currencies[element]}',
+                            ' ${dataAdapter.currencies[element]}',
                             style: const TextStyle(
                                 fontSize: 14, fontWeight: FontWeight.bold),
                           )))
                       .toList(),
                   onChanged: (String? selected) {
                     if (selected != null) {
-                      exchangeRate.selectedCurrency = selected;
+                      dataAdapter.selectedCurrency = selected;
                       _controller.text = _getFormattedCurrencyString(
-                          exchangeRate.money, selected);
+                          dataAdapter.money, selected);
                     }
                   },
                 ),
@@ -63,9 +56,9 @@ class _MyInputWidgetState extends State<MyInputWidget> {
                 padding: const EdgeInsets.symmetric(horizontal: 7),
                 child: ElevatedButton(
                   child:
-                      Center(child: Text('Updated in\n${exchangeRate.date} ')),
+                      Center(child: Text('Updated in\n${dataAdapter.date} ')),
                   onPressed: () {
-                    exchangeRate.readRate();
+                    dataAdapter.readRate();
                   },
                 ),
               )
@@ -94,12 +87,12 @@ class _MyInputWidgetState extends State<MyInputWidget> {
                 _selectAllText(_controller);
               },
               onChanged: (value) {
-                exchangeRate.money = _parseInputStringToDouble(value);
+                dataAdapter.money = _parseInputStringToDouble(value);
               },
               onEditingComplete: () {
                 _controller.text = _getFormattedCurrencyString(
                     _parseInputStringToDouble(_controller.text),
-                    exchangeRate.selectedCurrency);
+                    dataAdapter.selectedCurrency);
                 _selectAllText(_controller);
               },
             ),

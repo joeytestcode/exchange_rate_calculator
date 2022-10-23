@@ -1,4 +1,4 @@
-import 'package:exchange_rate_calculator/data/exchange_rate.dart';
+import 'package:exchange_rate_calculator/data/data_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -32,12 +32,12 @@ class _MyFilterListWidgetState extends State<MyFilterListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<ExchangeRate>(
-      builder: (context, exchangeRate, child) {
-        List<String> currencyKeys = exchangeRate.currencies.keys.toList();
+    return Consumer<DataAdapter>(
+      builder: (context, dataAdapter, child) {
+        List<String> currencyKeys = dataAdapter.currencies.keys.toList();
         List<String> filteredKeys = List.from(currencyKeys
             .where(
-              (element) => exchangeRate.currencies[element]!
+              (element) => dataAdapter.currencies[element]!
                   .toLowerCase()
                   .contains(_query.toLowerCase()),
             )
@@ -50,25 +50,20 @@ class _MyFilterListWidgetState extends State<MyFilterListWidget> {
                 itemCount: filteredKeys.length,
                 itemBuilder: (context, index) {
                   bool isChecked =
-                      !exchangeRate.filter.contains(filteredKeys[index]);
+                      dataAdapter.orderedList.contains(filteredKeys[index]);
                   return ListTile(
-                    title: Text(exchangeRate.currencies[filteredKeys[index]]
-                        .toString()),
+                    title: Text(
+                        dataAdapter.currencies[filteredKeys[index]].toString()),
                     trailing: Checkbox(
                       value: isChecked,
                       onChanged: (value) {
                         if (value != null) {
                           isChecked = value;
                           if (value) {
-                            if (exchangeRate.filter
-                                .contains(filteredKeys[index])) {
-                              exchangeRate.removeFilter(filteredKeys[index]);
-                            }
+                            dataAdapter.addToOrderedList(filteredKeys[index]);
                           } else {
-                            if (!exchangeRate.filter
-                                .contains(filteredKeys[index])) {
-                              exchangeRate.addFilter(filteredKeys[index]);
-                            }
+                            dataAdapter
+                                .removeFromOrderedList(filteredKeys[index]);
                           }
                         }
                       },
@@ -114,8 +109,6 @@ class _SearchViewState extends State<SearchView> {
             onSubmitted: widget.onSearch,
             onChanged: widget.enableSearchOnTextChange ? widget.onSearch : null,
             decoration: InputDecoration(
-              fillColor: Colors.blueGrey.shade50,
-              filled: true,
               prefixIcon: IconButton(
                 icon: const Icon(Icons.search),
                 onPressed: () {

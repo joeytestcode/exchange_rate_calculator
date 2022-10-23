@@ -1,3 +1,4 @@
+import 'package:exchange_rate_calculator/data/data_adapter.dart';
 import 'package:exchange_rate_calculator/data/exchange_rate.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +22,7 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: MyAppBar(widget: widget),
       body: Center(
         child: FutureBuilder(
-            future: Provider.of<ExchangeRate>(context, listen: false).isReady,
+            future: Provider.of<DataAdapter>(context).isReady,
             builder: (context, snapshot) {
               if (snapshot.hasData && snapshot.data == true) {
                 return Column(
