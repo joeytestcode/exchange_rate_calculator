@@ -5,6 +5,8 @@ enum Language { english, korean }
 class DefaultSettings {
   static const String sharedPreferencesExchangeRateKey = 'data';
   static const String sharedPreferencesSettingsKey = 'settings';
+
+  // Site providing Exchange rate : https://github.com/fawazahmed0/currency-api
   static const String webPageCurrencies =
       'https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies.min.json';
   static const String webPageRatesBasedOnBTC =
