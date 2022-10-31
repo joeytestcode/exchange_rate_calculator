@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../settings.dart';
+import '../strings.dart';
 import '../tool/web_fetcher.dart';
 
 class DataAdapter with ChangeNotifier {
@@ -81,17 +82,17 @@ class DataAdapter with ChangeNotifier {
 
   Future<void> readSharedReferences() async {
     final prefs = await SharedPreferences.getInstance();
-    final decodedMap1 = jsonDecode(
-        prefs.getString(DefaultSettings.sharedPreferencesExchangeRateKey) ??
-            '{}') as Map<String, dynamic>;
+    final decodedMap1 =
+        jsonDecode(prefs.getString(sharedPreferencesExchangeRateKey) ?? '{}')
+            as Map<String, dynamic>;
 
     _exchangeRate = decodedMap1.isNotEmpty
         ? ExchangeRate.fromJson(decodedMap1)
         : ExchangeRate.fromJson(DefaultSettings.getDefaultExchangeRateJson);
 
-    final decodedMap2 = jsonDecode(
-        prefs.getString(DefaultSettings.sharedPreferencesSettingsKey) ??
-            '{}') as Map<String, dynamic>;
+    final decodedMap2 =
+        jsonDecode(prefs.getString(sharedPreferencesSettingsKey) ?? '{}')
+            as Map<String, dynamic>;
 
     _settings = decodedMap2.isNotEmpty
         ? Settings.fromJson(decodedMap2)
@@ -108,16 +109,15 @@ class DataAdapter with ChangeNotifier {
   }
 
   void decodeDateAndRates(Map<String, dynamic> map) {
-    _exchangeRate.date = map[DefaultSettings.webKeyDate];
-    _exchangeRate.rates = map[DefaultSettings.webKeyBTC];
+    _exchangeRate.date = map[webKeyDate];
+    _exchangeRate.rates = map[webKeyBTC];
   }
 
   Future<void> readRate() async {
-    var page1 = await WebFetcher.getPage(DefaultSettings.webPageCurrencies);
+    var page1 = await WebFetcher.getPage(webPageCurrencies);
     decodeCurrencies(jsonDecode(page1.body));
 
-    var page2 =
-        await WebFetcher.getPage(DefaultSettings.webPageRatesBasedOnBTC);
+    var page2 = await WebFetcher.getPage(webPageRatesBasedOnBTC);
     decodeDateAndRates(jsonDecode(page2.body));
 
     notifyListeners();
@@ -125,13 +125,13 @@ class DataAdapter with ChangeNotifier {
 
   Future<void> saveExchangeRate() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString(DefaultSettings.sharedPreferencesExchangeRateKey,
-        jsonEncode(_exchangeRate.toJson()));
+    prefs.setString(
+        sharedPreferencesExchangeRateKey, jsonEncode(_exchangeRate.toJson()));
   }
 
   Future<void> saveSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setString(DefaultSettings.sharedPreferencesSettingsKey,
-        jsonEncode(_settings.toJson()));
+    prefs.setString(
+        sharedPreferencesSettingsKey, jsonEncode(_settings.toJson()));
   }
 }
