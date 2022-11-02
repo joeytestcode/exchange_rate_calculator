@@ -1,4 +1,5 @@
 import 'package:exchange_rate_calculator/data/data_adapter.dart';
+import 'package:exchange_rate_calculator/strings.dart';
 import 'package:exchange_rate_calculator/ui/MyAbout.dart';
 import 'package:exchange_rate_calculator/ui/MyFilters.dart';
 import 'package:exchange_rate_calculator/ui/MyLanguageSelect.dart';
@@ -17,95 +18,98 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppBar(
-      title: Text(widget.title),
-      actions: [
-        PopupMenuButton(
-          itemBuilder: (context) {
-            return [
-              PopupMenuItem(
-                  value: 0,
-                  child: Row(
-                    children: const [
-                      Icon(Icons.update, color: Colors.blue),
-                      Text('  Update currency rates'),
-                    ],
-                  )),
-              PopupMenuItem(
-                  value: 1,
-                  child: Row(
-                    children: const [
-                      Icon(Icons.settings, color: Colors.blue),
-                      Text('  Filters'),
-                    ],
-                  )),
-              PopupMenuItem(
-                  value: 2,
-                  child: Row(
-                    children: const [
-                      Icon(Icons.settings, color: Colors.blue),
-                      Text('  Language'),
-                    ],
-                  )),
-              PopupMenuItem(
-                  value: 3,
-                  child: Row(
-                    children: const [
-                      Icon(Icons.settings, color: Colors.blue),
-                      Text('  Reset all settings'),
-                    ],
-                  )),
-              PopupMenuItem(
-                  value: 1000,
-                  child: Row(
-                    children: const [
-                      Icon(Icons.question_mark, color: Colors.blue),
-                      Text('  About...'),
-                    ],
-                  )),
-            ];
-          },
-          onSelected: (value) {
-            switch (value) {
-              case 0:
-                Provider.of<DataAdapter>(context, listen: false).readRate();
-                break;
-              case 1:
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: ((context) => const MyFilters())));
-                break;
-              case 2:
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Select Language...'),
-                    content: const MyLanguageSelect(),
-                    actions: [
-                      ElevatedButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('OK'),
-                      ),
-                    ],
-                  ),
-                );
-                break;
-              case 3:
-                Provider.of<DataAdapter>(context, listen: false)
-                    .resetAllValue();
-                break;
-              case 1000:
-                showDialog(
-                  context: context,
-                  builder: (context) => const AlertDialog(content: MyAbout()),
-                );
-                break;
-              default:
-                break;
-            }
-          },
-        )
-      ],
-    );
+    return Consumer<DataAdapter>(builder: (context, dataAdapter, child) {
+      return AppBar(
+        title: Text(titles[dataAdapter.language][Titles.title]),
+        actions: [
+          PopupMenuButton(
+            itemBuilder: (context) {
+              return [
+                PopupMenuItem(
+                    value: 0,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.update, color: Colors.blue),
+                        Text(titles[dataAdapter.language]
+                            [Titles.updateCurrencyRates]),
+                      ],
+                    )),
+                PopupMenuItem(
+                    value: 1,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.settings, color: Colors.blue),
+                        Text(titles[dataAdapter.language][Titles.filters]),
+                      ],
+                    )),
+                PopupMenuItem(
+                    value: 2,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.settings, color: Colors.blue),
+                        Text(titles[dataAdapter.language][Titles.language]),
+                      ],
+                    )),
+                PopupMenuItem(
+                    value: 3,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.settings, color: Colors.blue),
+                        Text(titles[dataAdapter.language]
+                            [Titles.resetAllSettings]),
+                      ],
+                    )),
+                PopupMenuItem(
+                    value: 1000,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.question_mark, color: Colors.blue),
+                        Text(titles[dataAdapter.language][Titles.about]),
+                      ],
+                    )),
+              ];
+            },
+            onSelected: (value) {
+              switch (value) {
+                case 0:
+                  dataAdapter.readRate();
+                  break;
+                case 1:
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: ((context) => const MyFilters())));
+                  break;
+                case 2:
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Select Language...'),
+                      content: const MyLanguageSelect(),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+                  );
+                  break;
+                case 3:
+                  dataAdapter.resetAllValue();
+                  break;
+                case 1000:
+                  showDialog(
+                    context: context,
+                    builder: (context) => const AlertDialog(content: MyAbout()),
+                  );
+                  break;
+                default:
+                  break;
+              }
+            },
+          )
+        ],
+      );
+    });
   }
 
   @override

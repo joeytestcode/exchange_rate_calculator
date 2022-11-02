@@ -13,8 +13,8 @@ class DataAdapter with ChangeNotifier {
     isReady = init();
   }
 
-  late ExchangeRate _exchangeRate;
-  late Settings _settings;
+  ExchangeRate _exchangeRate = ExchangeRate.getDefaultExchangeRate();
+  Settings _settings = Settings.getDefaultSettings();
   late Future<bool> isReady;
 
   Language get language => _settings.language;

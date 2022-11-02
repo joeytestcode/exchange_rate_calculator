@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../strings.dart';
+
 class MyInputWidget extends StatefulWidget {
   const MyInputWidget({super.key});
 
@@ -55,8 +57,9 @@ class _MyInputWidgetState extends State<MyInputWidget> {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 7),
                 child: ElevatedButton(
-                  child:
-                      Center(child: Text('Updated in\n${dataAdapter.date} ')),
+                  child: Center(
+                      child: Text(
+                          '${titles[dataAdapter.language][Titles.updateButton]}\n${dataAdapter.date} ')),
                   onPressed: () {
                     dataAdapter.readRate();
                   },
