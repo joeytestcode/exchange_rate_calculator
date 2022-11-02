@@ -80,6 +80,14 @@ class DataAdapter with ChangeNotifier {
     return true;
   }
 
+  Future<void> resetAllValue() async {
+    _exchangeRate = ExchangeRate.getDefaultExchangeRate();
+    _settings = Settings.getDefaultSettings();
+    await saveExchangeRate();
+    await saveSettings();
+    notifyListeners();
+  }
+
   Future<void> readSharedReferences() async {
     final prefs = await SharedPreferences.getInstance();
     final decodedMap1 =
@@ -88,7 +96,7 @@ class DataAdapter with ChangeNotifier {
 
     _exchangeRate = decodedMap1.isNotEmpty
         ? ExchangeRate.fromJson(decodedMap1)
-        : ExchangeRate.fromJson(DefaultSettings.getDefaultExchangeRateJson);
+        : ExchangeRate.getDefaultExchangeRate();
 
     final decodedMap2 =
         jsonDecode(prefs.getString(sharedPreferencesSettingsKey) ?? '{}')
@@ -96,15 +104,15 @@ class DataAdapter with ChangeNotifier {
 
     _settings = decodedMap2.isNotEmpty
         ? Settings.fromJson(decodedMap2)
-        : Settings.fromJson(DefaultSettings.getDefaultSettingsJson);
+        : Settings.getDefaultSettings();
   }
 
   void decodeCurrencies(Map<String, dynamic> map) {
     _exchangeRate.currencies = {
-      Language.english.name:
+      Language.ENGLISH.name:
           map.map((key, value) => MapEntry(key, value.toString())),
-      Language.korean.name: map.map((key, value) => MapEntry(
-          key, _exchangeRate.currencies[Language.korean.name]?[key] ?? value))
+      Language.KOREAN.name: map.map((key, value) => MapEntry(
+          key, _exchangeRate.currencies[Language.KOREAN.name]?[key] ?? value))
     };
   }
 

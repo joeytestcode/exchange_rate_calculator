@@ -14,25 +14,28 @@ class _MyLanguageSelectState extends State<MyLanguageSelect> {
   @override
   Widget build(BuildContext context) {
     return Consumer<DataAdapter>(builder: (context, dataAdapter, child) {
-      return Container(
+      return SizedBox(
         width: double.minPositive,
         child: ListView.builder(
           shrinkWrap: true,
           itemCount: Language.values.length,
           itemBuilder: (context, index) {
             return ListTile(
-                title: Text(Language.values[index].name),
-                leading: Radio<Language>(
-                  groupValue: dataAdapter.language,
-                  value: Language.values[index],
-                  onChanged: (value) {
-                    setState(() {
+              title: Text(Language.values[index].name),
+              leading: Radio<Language>(
+                groupValue: dataAdapter.language,
+                value: Language.values[index],
+                onChanged: (value) {
+                  setState(
+                    () {
                       if (value != null) {
                         dataAdapter.language = value;
                       }
-                    });
-                  },
-                ));
+                    },
+                  );
+                },
+              ),
+            );
           },
         ),
       );

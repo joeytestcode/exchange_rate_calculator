@@ -48,6 +48,14 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                     ],
                   )),
               PopupMenuItem(
+                  value: 3,
+                  child: Row(
+                    children: const [
+                      Icon(Icons.settings, color: Colors.blue),
+                      Text('  Reset all settings'),
+                    ],
+                  )),
+              PopupMenuItem(
                   value: 1000,
                   child: Row(
                     children: const [
@@ -69,11 +77,21 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
               case 2:
                 showDialog(
                   context: context,
-                  builder: (context) => const AlertDialog(
-                    title: Text('Select Language...'),
-                    content: MyLanguageSelect(),
+                  builder: (context) => AlertDialog(
+                    title: const Text('Select Language...'),
+                    content: const MyLanguageSelect(),
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('OK'),
+                      ),
+                    ],
                   ),
                 );
+                break;
+              case 3:
+                Provider.of<DataAdapter>(context, listen: false)
+                    .resetAllValue();
                 break;
               case 1000:
                 showDialog(
