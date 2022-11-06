@@ -61,7 +61,12 @@ class _MyInputWidgetState extends State<MyInputWidget> {
                       child: Text(
                           '${titles[dataAdapter.language][Titles.updateButton]}\n${dataAdapter.date} ')),
                   onPressed: () {
-                    dataAdapter.readRate();
+                    dataAdapter.readRate().then((value) {
+                      final snackBar = SnackBar(
+                        content: Text('Updated to ${dataAdapter.date}'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    });
                   },
                 ),
               )
