@@ -1,6 +1,6 @@
+import 'package:common/my_about.dart';
 import 'package:exchange_rate_calculator/data/data_adapter.dart';
 import 'package:exchange_rate_calculator/strings.dart';
-import 'package:exchange_rate_calculator/ui/MyAbout.dart';
 import 'package:exchange_rate_calculator/ui/MyFilters.dart';
 import 'package:exchange_rate_calculator/ui/MyLanguageSelect.dart';
 import 'package:flutter/material.dart';
