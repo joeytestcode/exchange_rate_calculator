@@ -34,7 +34,6 @@ class _MyInputWidgetState extends State<MyInputWidget> {
               Expanded(
                 child: DropdownButton(
                   underline: Container(),
-                  dropdownColor: Theme.of(context).colorScheme.background,
                   value: dataAdapter.selectedCurrency,
                   items: dataAdapter.orderedList
                       .map((element) => DropdownMenuItem(
@@ -58,8 +57,12 @@ class _MyInputWidgetState extends State<MyInputWidget> {
                 padding: const EdgeInsets.symmetric(horizontal: 7),
                 child: ElevatedButton(
                   child: Center(
-                      child: Text(
-                          '${titles[dataAdapter.language][Titles.updateButton]}\n${dataAdapter.date} ')),
+                    child: Text(
+                      '${titles[dataAdapter.language][Titles.updateButton]}\n${dataAdapter.date} ',
+                      style:
+                          TextStyle(color: Theme.of(context).primaryColorLight),
+                    ),
+                  ),
                   onPressed: () {
                     dataAdapter.readRate().then((value) {
                       final snackBar = SnackBar(

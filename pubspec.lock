@@ -69,7 +69,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: c8cd967d84f55554a75fb24726cb726d3958eefe
+      resolved-ref: b1c82ac629fb06c7a1327168c247d80673f2451b
       url: "https://github.com/joeytestcode/common.git"
     source: git
     version: "0.0.1"
@@ -140,7 +140,7 @@ packages:
       name: flutter_launcher_icons
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.10.0"
+    version: "0.11.0"
   flutter_lints:
     dependency: "direct dev"
     description:
