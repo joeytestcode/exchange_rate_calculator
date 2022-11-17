@@ -59,8 +59,6 @@ class _MyInputWidgetState extends State<MyInputWidget> {
                   child: Center(
                     child: Text(
                       '${titles[dataAdapter.language][Titles.updateButton]}\n${dataAdapter.date} ',
-                      style:
-                          TextStyle(color: Theme.of(context).primaryColorLight),
                     ),
                   ),
                   onPressed: () {

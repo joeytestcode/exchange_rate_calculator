@@ -17,10 +17,9 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Exchange Rate Calculator',
         theme: ThemeData(
-          useMaterial3: true,
-          primarySwatch: Colors.deepPurple,
-          brightness: Brightness.dark,
-        ),
+            useMaterial3: true,
+            colorScheme: const ColorScheme.dark(
+                brightness: Brightness.dark, primary: Colors.blue)),
         home: const MyHomePage(title: 'Exchange Rate Calculator'),
       ),
     );
