@@ -123,10 +123,10 @@ class DataAdapter with ChangeNotifier {
 
   Future<void> readRate() async {
     var page1 = await GetWebpage.get(webPageCurrencies);
-    decodeCurrencies(page1.data);
+    decodeCurrencies(jsonDecode(page1.body));
 
     var page2 = await GetWebpage.get(webPageRatesBasedOnBTC);
-    decodeDateAndRates(page2.data);
+    decodeDateAndRates(jsonDecode(page2.body));
 
     notifyListeners();
   }
