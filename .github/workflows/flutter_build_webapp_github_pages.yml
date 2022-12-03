@@ -17,7 +17,7 @@ jobs:
       - run: flutter config --enable-web
       - run: flutter build web --base-href "/${{ github.event.repository.name }}/"
       
-      - run: sed "app.all('/*', function(req, res, next) {\n  res.header("Access-Control-Allow-Origin", "*");\n  res.header("Access-Control-Allow-Headers", "X-Requested-With");\n  next();\n});\n\n" build/web/flutter.js
+      - run: sed -i "1iapp.all('/*', function(req, res, next) {\n  res.header("Access-Control-Allow-Origin", "*");\n  res.header("Access-Control-Allow-Headers", "X-Requested-With");\n  next();\n});\n\n" build/web/flutter.js
 
       - run: git config user.name github-actions
       - run: git config user.email github-actions@github.com
