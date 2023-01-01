@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:common/get_webpage.dart';
+import 'package:common/web_helper.dart';
 import 'package:exchange_rate_calculator/data/exchange_rate.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -122,10 +122,10 @@ class DataAdapter with ChangeNotifier {
   }
 
   Future<void> readRate() async {
-    var page1 = await GetWebpage.get(webPageCurrencies);
+    var page1 = await WebHelper.getPage(webPageCurrencies);
     decodeCurrencies(jsonDecode(page1.body));
 
-    var page2 = await GetWebpage.get(webPageRatesBasedOnBTC);
+    var page2 = await WebHelper.getPage(webPageRatesBasedOnBTC);
     decodeDateAndRates(jsonDecode(page2.body));
 
     notifyListeners();
