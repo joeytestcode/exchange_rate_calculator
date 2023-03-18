@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.exchange_rate_calculator">
+   <uses-permission android:name="android.permission.INTERNET" />
    <application
         android:label="exchange_rate_calculator"
         android:name="${applicationName}"
