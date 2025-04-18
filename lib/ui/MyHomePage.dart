@@ -1,8 +1,7 @@
-import 'package:exchange_rate_calculator/data/data_adapter.dart';
-import 'package:exchange_rate_calculator/data/exchange_rate.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../data/data_adapter.dart';
 import 'MyAppBar.dart';
 import 'MyInputWidget.dart';
 import 'MyListWidget.dart';

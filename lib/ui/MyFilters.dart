@@ -1,7 +1,8 @@
 import 'package:common/search_view.dart';
-import 'package:exchange_rate_calculator/data/data_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../data/data_adapter.dart';
 
 class MyFilters extends StatelessWidget {
   const MyFilters({super.key});

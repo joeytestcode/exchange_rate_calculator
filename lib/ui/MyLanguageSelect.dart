@@ -1,7 +1,8 @@
-import 'package:exchange_rate_calculator/data/data_adapter.dart';
-import 'package:exchange_rate_calculator/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../data/data_adapter.dart';
+import '../settings.dart';
 
 class MyLanguageSelect extends StatefulWidget {
   const MyLanguageSelect({super.key});

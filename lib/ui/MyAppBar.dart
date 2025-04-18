@@ -1,12 +1,12 @@
 import 'package:common/my_about.dart';
-import 'package:exchange_rate_calculator/data/data_adapter.dart';
-import 'package:exchange_rate_calculator/strings.dart';
-import 'package:exchange_rate_calculator/ui/MyFilters.dart';
-import 'package:exchange_rate_calculator/ui/MyLanguageSelect.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../data/data_adapter.dart';
+import '../strings.dart';
+import 'MyFilters.dart';
 import 'MyHomePage.dart';
+import 'MyLanguageSelect.dart';
 
 class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
   const MyAppBar({

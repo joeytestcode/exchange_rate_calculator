@@ -1,9 +1,9 @@
-import 'package:exchange_rate_calculator/data/data_adapter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
+import '../data/data_adapter.dart';
 import '../strings.dart';
 
 class MyInputWidget extends StatefulWidget {
