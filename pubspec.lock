@@ -78,7 +78,7 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: b917491a87cfddc30bc054ff9b5bd2524d5827a7
+      resolved-ref: "826d1ca102729e5c1963058b8a6118f99eea820d"
       url: "https://github.com/joeytestcode/common.git"
     source: git
     version: "0.0.1"

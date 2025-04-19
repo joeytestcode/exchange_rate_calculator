@@ -1,4 +1,4 @@
-import 'package:common/my_about.dart';
+import 'package:common/j_about.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -99,7 +99,15 @@ class MyAppBar extends StatelessWidget implements PreferredSizeWidget {
                 case 1000:
                   showDialog(
                     context: context,
-                    builder: (context) => const AlertDialog(content: MyAbout()),
+                    builder: (context) => AlertDialog(
+                      content: const JAbout(),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
                   );
                   break;
                 default:

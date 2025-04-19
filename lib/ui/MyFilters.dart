@@ -1,4 +1,4 @@
-import 'package:common/search_view.dart';
+import 'package:common/j_searchview.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -135,7 +135,7 @@ class _MyFilterListWidgetState extends State<MyFilterListWidget> {
                 },
               ),
             ),
-            SearchView(
+            JSearchView(
               onSearch: _onChanged,
             )
           ],

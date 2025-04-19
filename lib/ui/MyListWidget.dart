@@ -32,16 +32,21 @@ class _MyListWidgetState extends State<MyListWidget> {
                   children: [
                     Expanded(
                       flex: 30,
-                      child:
-                          Text(dataAdapter.currencies[currentCurrency] ?? ''),
+                      child: Text(dataAdapter.currencies[currentCurrency] ?? '',
+                          style: const TextStyle(
+                              fontSize: 10, fontWeight: FontWeight.bold)),
                     ),
                     Expanded(
                       flex: 20,
                       child: Align(
                         alignment: Alignment.centerRight,
-                        child: Text(formatCurrency.format(dataAdapter.money /
-                            dataAdapter.rates[dataAdapter.selectedCurrency]! *
-                            dataAdapter.rates[currentCurrency]!)),
+                        child: Text(
+                            formatCurrency.format(dataAdapter.money /
+                                dataAdapter
+                                    .rates[dataAdapter.selectedCurrency]! *
+                                dataAdapter.rates[currentCurrency]!),
+                            style: const TextStyle(
+                                fontSize: 10, fontWeight: FontWeight.bold)),
                       ),
                     ),
                     const Spacer(flex: 2),
